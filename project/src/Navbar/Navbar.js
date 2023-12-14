@@ -38,12 +38,12 @@ const Navbar = () => {
             </Link>
           </li>
         </ul>
+        <div className={`user-login ${menuVisible ? "visible" : ""}`}>
+          <img src={userLogin} alt="user-login" />
+          <button>Login</button>
+        </div>
       </div>
 
-      <div className={`user-login ${menuVisible ? "visible" : ""}`}>
-        <img src={userLogin} alt="user-login" />
-        <button>Login</button>
-      </div>
       <div
         className={`menu-icon ${menuVisible ? "open" : ""}`}
         onClick={toggleMenu}

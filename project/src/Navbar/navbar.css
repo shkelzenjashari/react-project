@@ -4,6 +4,12 @@
   justify-content: space-between;
   align-items: center;
 }
+.navbar-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 60px;
+}
 .navbar-logo img {
   width: 75px;
   height: 75px;
@@ -48,7 +54,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 30vh;
     background-color: rgb(137, 178, 255);
     color: #fff;
     display: none;
@@ -69,10 +75,6 @@
     display: flex;
   }
 
-  .user-login {
-    visibility: hidden;
-  }
-
   .user-login.visible {
     display: flex;
   }
@@ -88,7 +90,7 @@
     width: 35px;
     height: 5px;
     background-color: #333;
-    margin: 6px 0;
+    margin: 6px 25px;
     transition: 0.4s;
   }
 
