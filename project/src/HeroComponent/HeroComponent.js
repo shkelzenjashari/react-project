@@ -5,7 +5,7 @@ const HeroComponent = () => {
   const [keyword, setKeyword] = useState("");
   return (
     <div className="hero-component">
-      <h1>Welcome to our blog!</h1>
+      <h1>Welcome to Meta Blog!</h1>
       <div className="heroComponentBackground">
         <input
           type="text"
