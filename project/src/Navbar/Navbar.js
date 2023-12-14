@@ -37,11 +37,12 @@ const Navbar = () => {
               About
             </Link>
           </li>
-        </ul>
-        <div className={`user-login ${menuVisible ? "visible" : ""}`}>
+
+          {/* <div className={`user-login ${menuVisible ? "visible" : ""}`}> */}
           <img src={userLogin} alt="user-login" />
           <button>Login</button>
-        </div>
+        </ul>
+        {/* </div> */}
       </div>
 
       <div
