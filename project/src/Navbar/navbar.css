@@ -50,7 +50,7 @@
 
 @media (max-width: 768px) {
   .navbar-list {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100vw;
@@ -62,6 +62,7 @@
     align-items: center;
     padding-top: 50px;
   }
+
   .navbar-list ul {
     flex-direction: column;
   }
