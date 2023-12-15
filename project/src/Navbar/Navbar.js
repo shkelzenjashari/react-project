@@ -27,7 +27,7 @@ const Navbar = () => {
         src={userLogin}
         alt="user-login"
       />
-      <button className="night-button">Night mode</button>
+      <button className="night-button">Dark Mode</button>
     </div>
   );
 };
