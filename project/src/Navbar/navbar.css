@@ -14,6 +14,12 @@
   align-items: center;
   gap: 50px;
 }
+li {
+  list-style: none;
+}
+.navbar-list li.active a {
+  color: rgb(136, 0, 255);
+}
 .navbar-list li a {
   text-decoration: none;
   color: var(--Secondary-600, #3b3c4a);
