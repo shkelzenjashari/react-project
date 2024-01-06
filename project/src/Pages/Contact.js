@@ -1,5 +1,5 @@
 import React from "react";
-import LoginForm from "../Login/LoginForm";
+import Login from "../Login/Login";
 import Navbar from "../Navbar/Navbar";
 
 const Contact = () => {

@@ -6,6 +6,7 @@
   align-items: center;
   flex-direction: column;
   gap: 50px;
+  margin-bottom: 50px;
 }
 .hero-component h1 {
   margin-top: 50px;
