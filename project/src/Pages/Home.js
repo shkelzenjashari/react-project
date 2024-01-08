@@ -8,7 +8,7 @@ const Home = () => {
     <div>
       <Navbar />
       <HeroComponent />
-      <GridSection />
+      {/* <GridSection /> */}
     </div>
   );
 };

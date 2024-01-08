@@ -10,8 +10,8 @@ const Navbar = () => {
     <div className="navbar">
       <img className="logo" src={Logo} alt="logo" />
       <ul className="navbar-list">
-        <li className={location.pathname === "/" ? "active" : ""}>
-          <Link to="/">Home</Link>
+        <li className={location.pathname === "/home" ? "active" : ""}>
+          <Link to="/home">Home</Link>
         </li>
         <li className={location.pathname === "/about" ? "active" : ""}>
           <Link to="/about">About</Link>
