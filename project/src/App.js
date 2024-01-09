@@ -8,6 +8,7 @@ import Contact from "./Pages/Contact.js";
 
 import Login from "./Login/Login";
 import SignUp from "./SignUp/SignUp";
+import ErrorPage from "./ErrorPage/ErrorPage";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Router>
     </div>
