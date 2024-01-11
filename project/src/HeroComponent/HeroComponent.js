@@ -6,23 +6,73 @@ const HeroComponent = () => {
   const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [activePost, setActivePost] = useState(false);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+
+    if (activePost) {
+      editPost(activePost.id);
+    } else {
+      addPost();
+    }
+  };
+
+  const editPost = (postId) => {
+    const updatedPost = {
+      title: title,
+      body: body,
+    };
+
+    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedPost),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const updatedPosts = posts.map((post) =>
+          post.id === postId ? data : post
+        );
+        setPosts(updatedPosts);
+      })
+      .catch((error) => console.error("Error editing post:", error));
+  };
+
+  const addPost = () => {
+    const newPost = {
+      title: title,
+      body: body,
+    };
+
+    fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newPost),
+    })
+      .then((response) => response.json())
+      .then((data) => setPosts([data, ...posts]))
+      .catch((error) => console.error("Error adding post:", error));
   };
 
   const searchPosts = (keyword) => {
-    fetch(`https://jsonplaceholder.typicode.com/posts`)
-      .then((response) => {
-        if (response.status === 200) {
-          setPosts(
-            posts.filter((post) => post.title.toLowerCase().startsWith(keyword))
-          );
-        }
+    fetch("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => response.json())
+      .then((data) => {
+        const filteredPosts = data.filter(
+          (post) =>
+            (post.title &&
+              post.title.toLowerCase().includes(keyword.toLowerCase())) ||
+            (post.body &&
+              post.body.toLowerCase().includes(keyword.toLowerCase()))
+        );
+        setPosts(filteredPosts);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => console.error("Error searching posts:", error));
   };
 
   const deletePost = (id) => {
@@ -30,37 +80,18 @@ const HeroComponent = () => {
       method: "DELETE",
     })
       .then((response) => {
-        if (response.status === 200) {
+        if (response.ok) {
           setPosts(posts.filter((post) => post.id !== id));
+        } else {
+          console.error(
+            `Failed to delete post with ID ${id}. Status code: ${response.status}`
+          );
         }
       })
       .catch((error) => {
-        console.log(error);
+        console.error("Error deleting post:", error);
       });
   };
-  const editPost = (post) => {
-    setTitle(post.title);
-    setBody(post.body);
-  };
-
-  // const addPost = (title, body) => {
-  //   fetch("https://jsonplaceholder.typicode.com/posts"),
-  //     {
-  //       method: "POST",
-  //       body: JSON.stringify({
-  //         title,
-  //         body,
-  //         userId: Math.random(),
-  //       }),
-  //       headers: {
-  //         "Content-type": "application/json",
-  //       },
-  //     }
-  //       .then((response) => response.json())
-  //       .then((object) => {
-  //         setPosts([object, ...posts]);
-  //       });
-  // };
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/posts")
@@ -70,8 +101,7 @@ const HeroComponent = () => {
   }, []);
 
   useEffect(() => {
-    searchPosts();
-    console.log(keyword);
+    searchPosts(keyword);
   }, [keyword]);
 
   return (
