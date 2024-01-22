@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useFormValidation from "../Hooks/useFormValidation";
 
 const Login = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   const { errors, validateForm } = useFormValidation();
@@ -24,6 +25,7 @@ const Login = () => {
 
     if (validateForm(formData, "signin")) {
       console.log("Form submitted successfully");
+      setIsLoggedIn(true);
     }
   };
 
