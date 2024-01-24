@@ -1,4 +1,4 @@
-/* LoginForm.css */
+/* LoginForm.css
 .login-container {
   display: flex;
   height: 100vh;
@@ -71,4 +71,87 @@ input {
 
 h2 {
   margin-bottom: 15px;
+} */
+/* SignIn.css */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: rgba(14, 42, 71, 1);
+}
+
+.signinBx {
+  display: flex;
+  overflow: hidden;
+  max-width: 800px;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.signinBx .imgBx,
+.signinBx .formBx {
+  flex: 1;
+}
+
+.signinBx .formBx {
+  padding: 40px;
+  transition: 0.5s;
+}
+.signinBx h3 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.signinBx .formGroup {
+  margin-bottom: 20px;
+}
+
+.signinBx input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.signinBx input.is-invalid {
+  border-color: red;
+}
+
+.signinBx .error-message {
+  color: red;
+  margin-top: 5px;
+}
+
+.signinBx button {
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.signinBx .imgBx img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 991px) {
+  .signinBx {
+    flex-direction: column;
+  }
+
+  .signinBx .container {
+    max-width: 400px;
+  }
+
+  .signinBx .imgBx {
+    display: none;
+  }
+
+  .signinBx .formBx {
+    width: 100%;
+  }
 }
