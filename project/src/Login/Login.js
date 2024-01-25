@@ -1,86 +1,8 @@
-// import React, { useState } from "react";
-// import Navbar from "../Navbar/Navbar";
-// import "./Login.css";
-// import image from "../Images/typing.jpg";
-// import { Link, useNavigate } from "react-router-dom";
-// import useFormValidation from "../Hooks/useFormValidation";
-
-// // const Login = () => {
-// //   const [isLoggedIn, setIsLoggedIn] = useState(false);
-// //   const navigate = useNavigate();
-
-// //   const { errors, validateForm } = useFormValidation();
-
-// //   const [formData, setFormData] = useState({
-// //     email: "",
-// //     password: "",
-// //   });
-
-// //   const handleSignUpClick = () => {
-// //     navigate("/signup");
-// //   };
-
-// //   const handleSubmit = (e) => {
-// //     e.preventDefault();
-
-// //     if (validateForm(formData, "signin")) {
-// //       console.log("Form submitted successfully");
-// //       setIsLoggedIn(true);
-// //     }
-// //   };
-
-// //   const handleChange = (evt) => {
-// //     setFormData({ ...formData, [evt.target.name]: evt.target.value });
-// //   };
-
-// //   return (
-// //     <>
-// //       <Navbar />
-// //       <div className="login-container">
-// //         <div className="form-container">
-// //           <form onSubmit={handleSubmit}>
-// //             <h2>Sign In</h2>
-// //             <label>Email:</label>
-// //             <input
-// //               type="email"
-// //               name="email"
-// //               value={formData.email}
-// //               onChange={handleChange}
-// //               required
-// //             />
-// //             {errors.email && <p className="error">{errors.email}</p>}
-// //             <label>Password:</label>
-// //             <input
-// //               type="password"
-// //               name="password"
-// //               value={formData.password}
-// //               onChange={handleChange}
-// //               required
-// //             />
-// //             {errors.password && <p className="error">{errors.password}</p>}
-// //             <button className="loginFormButton" type="submit">
-// //               Sign in
-// //             </button>
-// //           </form>
-// //         </div>
-// //         <div className="image-container">
-// //           <img src={image} alt="Login" />
-// //           <button
-// //             className="loginFormButton switch-button login"
-// //             onClick={handleSignUpClick}
-// //           >
-// //             Don't have an account? Sign Up
-// //           </button>
-// //         </div>
-// //       </div>
-// //     </>
-// //   );
-// // };
-
-// export default Login;
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
+import img from "../Images/typing.jpg";
+import CongratulationsModal from "../Modal/CongratulationsModal";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -88,54 +10,73 @@ const Login = () => {
   const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
 
+  const validateSignInForm = () => {
+    let isValid = true;
+
+    if (!credentials.email || !credentials.email.includes("@")) {
+      setEmailError("Valid email address is required");
+      isValid = false;
+    } else {
+      setEmailError(null);
+    }
+
+    if (!credentials.password || credentials.password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      isValid = false;
+    } else {
+      setPasswordError(null);
+    }
+
+    return isValid;
+  };
+
   const submit = async (event) => {
     event.preventDefault();
-    const fetchUrl = "http://localhost:8000/api/user/login";
 
-    try {
-      const response = await fetch(fetchUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
+    if (validateSignInForm()) {
+      const fetchUrl = "http://localhost:8000/api/user/login";
 
-      if (!response.ok) {
-        const responseData = await response.json();
+      try {
+        const response = await fetch(fetchUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        });
 
-        if (response.status === 401) {
-          setEmailError(responseData.emailError || null);
-          setPasswordError(
-            responseData.passwordError ||
-              "Incorrect password. Please try again."
-          );
+        if (!response.ok) {
+          const responseData = await response.json();
+
+          if (response.status === 401) {
+            setEmailError(responseData.emailError || null);
+          } else {
+            throw new Error("Login failed");
+          }
         } else {
-          throw new Error("Login failed");
+          setEmailError(null);
+          setPasswordError(null);
+
+          const data = await response.json();
+          localStorage.setItem("user", JSON.stringify(data));
+
+          navigate("/home");
         }
-      } else {
-        setEmailError(null);
-        setPasswordError(null);
-
-        const data = await response.json();
-        localStorage.setItem("user", JSON.stringify(data));
-
-        navigate("/home");
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
     }
   };
 
   const handleChange = (type) => (e) => {
-    setCredentials({ ...credentials, [type.toLowerCase()]: e.target.value });
+    setCredentials({ ...credentials, [type]: e.target.value });
   };
 
   return (
     <div className="container">
       <div className="signinBx">
         <div className="imgBx">
-          <img src={""} alt="Background" />
+          <img src={img} alt="Background" />
         </div>
         <div className="formBx">
           <form onSubmit={submit} className="signinForm">
@@ -147,7 +88,7 @@ const Login = () => {
                 type="text"
                 className={`form-control ${emailError ? "is-invalid" : ""}`}
                 placeholder="Enter Email"
-                onChange={handleChange("Email")}
+                onChange={handleChange("email")}
               />
               {emailError && <div className="error-message">{emailError}</div>}
             </div>
@@ -157,7 +98,7 @@ const Login = () => {
                 type="password"
                 className={`form-control ${passwordError ? "is-invalid" : ""}`}
                 placeholder="Enter password"
-                onChange={handleChange("Password")}
+                onChange={handleChange("password")}
               />
               {passwordError && (
                 <div className="error-message">{passwordError}</div>
@@ -168,6 +109,10 @@ const Login = () => {
                 Submit
               </button>
             </div>
+            <p>
+              Doesn't have an account?
+              <Link to="/signupmodal">Sign up</Link>
+            </p>
           </form>
         </div>
       </div>

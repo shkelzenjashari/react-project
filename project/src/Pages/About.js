@@ -1,11 +1,14 @@
 import React from "react";
 import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
+import TextComponent from "../TextComponent/TextComponent";
 
 const About = () => {
   return (
-    <div>
+    <div className="about">
       <Navbar />
-      About
+      <TextComponent />
+      <Footer />
     </div>
   );
 };

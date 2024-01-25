@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./heroComponent.css";
 
 const HeroComponent = () => {
@@ -6,64 +7,71 @@ const HeroComponent = () => {
   const [posts, setPosts] = useState([]);
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [activePost, setActivePost] = useState(false);
+  const [activePost, setActivePost] = useState(null);
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
 
     if (activePost) {
-      editPost(activePost.id);
+      await editPost(title, body, activePost);
     } else {
-      addPost();
+      await addPost(title, body);
+    }
+
+    // Reset form fields and activePost state
+    setTitle("");
+    setBody("");
+    setActivePost(null);
+  };
+
+  const editPost = async (title, body, activePost) => {
+    try {
+      const response = await axios.put(
+        `https://jsonplaceholder.typicode.com/posts/${activePost.id}`,
+        {
+          id: activePost.id,
+          title,
+          body,
+          userId: activePost.userId,
+        }
+      );
+
+      const updatedPost = response.data;
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === updatedPost.id ? updatedPost : post
+        )
+      );
+      setActivePost(null);
+    } catch (error) {
+      console.error("Error editing post:", error);
     }
   };
 
-  const editPost = (postId) => {
-    const updatedPost = {
-      title: title,
-      body: body,
-    };
+  const addPost = async (title, body) => {
+    try {
+      const response = await axios.post(
+        "https://jsonplaceholder.typicode.com/posts",
+        {
+          title,
+          body,
+          userId: Math.random(),
+        }
+      );
 
-    fetch(`https://jsonplaceholder.typicode.com/posts/${postId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedPost),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const updatedPosts = posts.map((post) =>
-          post.id === postId ? data : post
-        );
-        setPosts(updatedPosts);
-      })
-      .catch((error) => console.error("Error editing post:", error));
-  };
-
-  const addPost = () => {
-    const newPost = {
-      title: title,
-      body: body,
-    };
-
-    fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newPost),
-    })
-      .then((response) => response.json())
-      .then((data) => setPosts([data, ...posts]))
-      .catch((error) => console.error("Error adding post:", error));
+      const newPost = response.data;
+      setPosts((prevPosts) => [newPost, ...prevPosts]);
+    } catch (error) {
+      console.error("Error adding post:", error);
+    }
   };
 
   const searchPosts = (keyword) => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((data) => {
-        const filteredPosts = data.filter(
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => {
+        const filteredPosts = response.data.filter(
           (post) =>
             (post.title &&
               post.title.toLowerCase().includes(keyword.toLowerCase())) ||
@@ -75,38 +83,33 @@ const HeroComponent = () => {
       .catch((error) => console.error("Error searching posts:", error));
   };
 
-  const deletePost = (id) => {
-    fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-      method: "DELETE",
-    })
-      .then((response) => {
-        if (response.ok) {
-          setPosts(posts.filter((post) => post.id !== id));
-        } else {
-          console.error(
-            `Failed to delete post with ID ${id}. Status code: ${response.status}`
-          );
-        }
-      })
-      .catch((error) => {
-        console.error("Error deleting post:", error);
-      });
+  const deletePost = async (id) => {
+    try {
+      await axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`);
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== id));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
   };
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => response.json())
-      .then((data) => setPosts(data))
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => setPosts(response.data))
       .catch((error) => console.error("Error fetching posts:", error));
   }, []);
 
   useEffect(() => {
-    searchPosts(keyword);
+    if (keyword.trim() !== "") {
+      searchPosts(keyword);
+    } else {
+      setFilteredPosts(posts);
+    }
   }, [keyword]);
 
   return (
     <div className="hero-component">
-      <h1>Welcome to Meta Blog!</h1>
+      <h1 className="hero-title">Welcome to Meta Blog!</h1>
       <div className="heroComponentBackground">
         <input
           type="search"
@@ -123,8 +126,17 @@ const HeroComponent = () => {
               Title
               <input
                 type="text"
-                value={title}
-                onChange={(evt) => setTitle(evt.target.value)}
+                value={activePost ? activePost.title : title}
+                onChange={(evt) => {
+                  const updatedTitle = evt.target.value;
+                  setTitle(updatedTitle);
+                  if (activePost) {
+                    setActivePost((prevActivePost) => ({
+                      ...prevActivePost,
+                      title: updatedTitle,
+                    }));
+                  }
+                }}
               />
             </label>
           </div>
@@ -133,8 +145,17 @@ const HeroComponent = () => {
               Body
               <textarea
                 type="text"
-                value={body}
-                onChange={(evt) => setBody(evt.target.value)}
+                value={activePost ? activePost.body : body}
+                onChange={(evt) => {
+                  const updatedBody = evt.target.value;
+                  setBody(updatedBody);
+                  if (activePost) {
+                    setActivePost((prevActivePost) => ({
+                      ...prevActivePost,
+                      body: updatedBody,
+                    }));
+                  }
+                }}
               />
             </label>
           </div>
@@ -146,7 +167,7 @@ const HeroComponent = () => {
           <div key={post.id} className="post-card">
             <h3>{post.title}</h3>
             <p>{post.body}</p>
-            <button onClick={() => editPost(post)}>Edit</button>
+            <button onClick={() => setActivePost(post)}>Edit</button>
             <button onClick={() => deletePost(post.id)}>Delete</button>
           </div>
         ))}

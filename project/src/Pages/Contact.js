@@ -1,12 +1,14 @@
 import React from "react";
-import Login from "../Login/Login";
 import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
+import TextComponent from "../TextComponent/TextComponent";
 
 const Contact = () => {
   return (
-    <div>
+    <div className="contact">
       <Navbar />
-      Contact
+      <TextComponent />
+      <Footer />
     </div>
   );
 };

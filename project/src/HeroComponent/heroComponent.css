@@ -1,6 +1,6 @@
 .hero-component {
   width: 100%;
-  height: 400px;
+  height: 100%;
   /* display: flex; */
   justify-content: center;
   align-items: center;
@@ -8,10 +8,12 @@
   gap: 50px;
   margin-bottom: 50px;
 }
-.hero-component h1 {
+.hero-title {
   margin-top: 50px;
+  margin-bottom: 50px;
   font-size: 35px;
   text-align: center;
+  color: white;
 }
 .heroComponentBackground {
   display: flex;
@@ -37,6 +39,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .post-card {
@@ -44,6 +48,7 @@
   padding: 15px;
   border-radius: 8px;
   margin-left: 5px;
+  background: white;
 }
 
 .post-card p {
@@ -57,21 +62,19 @@
 
 .pre-post-grid {
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
 }
 
-/* <label for="title">Title</label>
-        <input
-          className="edit-input"
-          id="title"
-          type="text"
-          placeholder="Title"
-        />
-        <label for="body">Body</label>
-        <input
-          className="edit-input"
-          id="body"
-          type="text"
-          placeholder="Title"
-        /> */
+.pre-post-grid h3 {
+  color: white;
+}
+
+.pre-post-grid form {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}

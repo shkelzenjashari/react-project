@@ -9,6 +9,8 @@ import Contact from "./Pages/Contact.js";
 import Login from "./Login/Login";
 import SignUp from "./SignUp/SignUp";
 import ErrorPage from "./ErrorPage/ErrorPage";
+import SignUpModal from "./SignUp/SignUpModal";
+import LoginModal from "./Login/LoginModal";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/signupmodal" element={<SignUpModal />} />
+          <Route path="/loginmodal" element={<LoginModal />} />
 
           <Route path="*" element={<ErrorPage />} />
         </Routes>
